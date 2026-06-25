@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+:root {
+  --jp-bg: #04050f;
+  --jp-blue: #3b82f6;
+  --jp-cyan: #22d3ee;
+  --jp-purple: #a855f7;
+  --jp-pink: #ec4899;
+  --jp-gold: #fbbf24;
+  --jp-lime: #84cc16;
+  --jp-magenta: #d946ef;
+}
+
+* { scroll-behavior: smooth; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Otimizações para navegação instantânea */
+main {
+  contain: layout paint style;
+}
+
+/* Durante view transition, scroll instantâneo */
+html:has(::view-transition-new(root)),
+html:has(::view-transition-old(root)) {
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--jp-bg);
+  color: #e7ecff;
+  overflow-x: hidden;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Instant navigation transitions (~120ms — imperceptível, sem lag) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 120ms;
+  animation-timing-function: cubic-bezier(.2,.8,.2,1);
+  animation-fill-mode: both;
+}
+::view-transition-old(root) {
+  animation-name: jp-vt-out;
+}
+::view-transition-new(root) {
+  animation-name: jp-vt-in;
+}
+@keyframes jp-vt-out {
+  to { opacity: 0; transform: translateY(0); }
+}
+@keyframes jp-vt-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+::selection { background: rgba(168,85,247,.45); color:#fff; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #07081a; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--jp-purple), var(--jp-cyan)); border-radius: 999px; }
+
+/* gradient text */
+.jp-gradient-text {
+  background: linear-gradient(110deg,#60a5fa,#a855f7,#22d3ee,#ec4899,#fbbf24);
+  background-size: 320% 320%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: jp-gradient-move 6s ease infinite;
+}
+@keyframes jp-gradient-move { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+/* --- AURORA / MESH background --- */
+.jp-aurora {
+  position: absolute; inset: -24%;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 20%, rgba(124,58,237,.28), transparent 60%),
+    radial-gradient(ellipse 60% 70% at 80% 30%, rgba(34,211,238,.22), transparent 60%),
+    radial-gradient(ellipse 80% 50% at 60% 80%, rgba(236,72,153,.15), transparent 60%);
+  filter: blur(40px) saturate(1.4);
+  animation: jp-aurora-move 18s ease-in-out infinite alternate;
+}
+@keyframes jp-aurora-move {
+  from { transform: rotate(-4deg) scale(1); }
+  to   { transform: rotate(4deg) scale(1.08); }
+}
+
+/* --- Intro cinematic 10s enhanced --- */
+.jp-intro {
+  position: fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  overflow:hidden;
+  background: radial-gradient(circle at 50% 45%, #101638 0%, #05060f 70%);
+}
+.jp-intro-bgvid {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.34; mix-blend-mode:screen;
+  filter: saturate(1.25) brightness(1.1);
+}
+.jp-intro.jp-intro-out { animation: jp-intro-fade 1.15s ease forwards; }
+@keyframes jp-intro-fade { to { opacity:0; visibility:hidden; transform:scale(1.14);} }
+
+/* rings */
+.jp-ring { position:absolute; border-radius:50%; border:1px solid rgba(160,180,255,.17); animation: jp-ring-spin 14s linear infinite; }
+.jp-ring::before { content:""; position:absolute; top:-4px; left:50%; width:10px; height:10px; border-radius:50%; background:var(--jp-cyan); box-shadow:0 0 22px 6px var(--jp-cyan); }
+@keyframes jp-ring-spin { to { transform: rotate(360deg); } }
+
+/* intro letters */
+.jp-intro-word { font-weight: 900; letter-spacing:.04em; line-height:1; text-align:center; text-shadow: 0 8px 46px rgba(120,90,255,.34); }
+.jp-letter { display:inline-block; opacity:0; transform: translateY(40px) rotateX(-90deg); animation: jp-letter-in .7s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes jp-letter-in { to { opacity:1; transform:translateY(0) rotateX(0);} }
+.jp-intro-sub { opacity:0; animation: jp-fade-up 1s ease forwards; }
+@keyframes jp-fade-up { from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }
+
+.jp-progress { height:3px; border-radius:999px; background: linear-gradient(90deg, var(--jp-blue), var(--jp-purple), var(--jp-cyan)); animation: jp-progress-grow 10s linear forwards; }
+@keyframes jp-progress-grow { from{width:0%} to {width:100%} }
+
+/* floating blobs */
+.jp-blob { position:absolute; border-radius:50%; filter:blur(64px); opacity:.52; animation: jp-float 12s ease-in-out infinite; }
+@keyframes jp-float {
+  0%,100%{transform:translateY(0) translateX(0) scale(1)}
+  33%{transform:translateY(-40px) translateX(28px) scale(1.08)}
+  66%{transform:translateY(28px) translateX(-18px) scale(.96)}
+}
+
+/* glass card */
+.jp-card {
+  background: linear-gradient(170deg, rgba(255,255,255,.07), rgba(255,255,255,.021));
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s, border-color .45s;
+}
+.jp-card:hover {
+  transform: translateY(-10px) scale(1.018);
+  border-color: rgba(168,85,247,.48);
+  box-shadow: 0 30px 70px -22px rgba(124,58,237,.55), 0 0 40px rgba(34,211,238,.10);
+}
+
+/* soft float */
+.jp-float-slow { animation: jp-float-y 6s ease-in-out infinite; }
+@keyframes jp-float-y { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+
+/* reveal */
+.jp-reveal { opacity:0; transform: translateY(34px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);}
+.jp-reveal.jp-visible { opacity:1; transform:translateY(0); }
+
+/* buttons */
+.jp-btn { position:relative; overflow:hidden; transition: transform .25s ease, box-shadow .25s ease; }
+.jp-btn:hover { transform: translateY(-3px); box-shadow:0 18px 38px -10px rgba(124,58,237,.78);}
+.jp-btn::after { content:""; position:absolute; top:0; left:-120%; width:60%; height:100%; background:linear-gradient(110deg, transparent, rgba(255,255,255,.33), transparent); transition:left .6s ease;}
+.jp-btn:hover::after { left:130%; }
+
+/* marquee */
+.jp-marquee { display:flex; gap:3rem; white-space:nowrap; animation: jp-marquee 22s linear infinite; }
+@keyframes jp-marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* grid bg */
+.jp-grid-bg {
+  background-image:
+    linear-gradient(rgba(120,140,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,140,255,.07) 1px, transparent 1px);
+  background-size:44px 44px;
+  mask-image: radial-gradient(circle at 50% 40%, black 0%, transparent 75%);
+}
+
+/* pulse */
+.jp-pulse { animation: jp-pulse 2.4s ease-in-out infinite; }
+@keyframes jp-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(34,211,238,.5)} 50%{box-shadow:0 0 0 14px rgba(34,211,238,0)} }
+
+/* Tilt 3D */
+.jp-tilt {
+  transform-style: preserve-3d;
+  perspective: 900px;
+}
+.jp-tilt-inner {
+  transform-style: preserve-3d;
+  transition: transform .18s ease-out;
+  will-change: transform;
+}
+.jp-layer-1 { transform: translateZ(52px); }
+.jp-layer-2 { transform: translateZ(28px); }
+.jp-layer-0 { transform: translateZ(0px); }
+
+/* Holographic rim */
+.jp-holo {
+  position: relative;
+}
+.jp-holo::before {
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius:inherit;
+  background: conic-gradient(from 0deg, #22d3ee, #a855f7, #ec4899, #22d3ee);
+  filter: blur(14px);
+  opacity: .16;
+  z-index:-1;
+  animation: jp-spin 8s linear infinite;
+}
+@keyframes jp-spin { to { transform: rotate(360deg);} }
+
+/* shimmer border */
+.jp-shine {
+  position: relative; overflow: hidden;
+}
+.jp-shine::after {
+  content:"";
+  position:absolute; inset:-40%;
+  background: linear-gradient(110deg, transparent 45%, rgba(255,255,255,.08) 50%, transparent 55%);
+  transform: translateX(-120%) skewX(-12deg);
+  animation: jp-shine-move 5.5s ease-in-out infinite;
+}
+@keyframes jp-shine-move { 0%{transform:translateX(-120%) skewX(-12deg)} 55%,100%{transform:translateX(240%) skewX(-12deg)} }
+
+/* video hero overlay */
+.jp-hero-vid {
+  position: absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.20; filter: saturate(1.2) contrast(1.08);
+}
+.jp-hero-overlay {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(124,58,237,.17), transparent 60%),
+    linear-gradient(180deg, rgba(4,5,16,.20) 0%, rgba(4,5,16,.9) 92%);
+}
+
+/* floating stat orbs */
+.jp-orb {
+  width:96px; height:96px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.11);
+  backdrop-filter: blur(8px);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  box-shadow: 0 12px 44px rgba(0,0,0,.35), inset 0 1px 8px rgba(255,255,255,.09);
+  animation: jp-float-y 5.6s ease-in-out infinite;
+}
+
+/* Parallax helper */
+.jp-parallax { will-change: transform; }
+
+/* Timeline / process line */
+.jp-timeline-line {
+  position: absolute; left:4px; top:10px; bottom:10px;
+  width:2px;
+  background: linear-gradient(180deg, #22d3ee, #a855f7, #ec4899);
+  opacity:.42;
+}
+
+/* glow text */
+.jp-glow {
+  text-shadow: 0 0 16px rgba(34,211,238,.35), 0 0 30px rgba(168,85,247,.22);
+}
+
+/* Fancy tag */
+.jp-tag {
+  font-size: 11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  padding:6px 12px; border-radius:999px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:#a5f3fc;
+}
+
+/* Counter number */
+.jp-counter { font-variant-numeric: tabular-nums; }
+
+/* Video thumbnail */
+.jp-video-thumb {
+  position: relative; overflow:hidden; border-radius: 1.25rem;
+}
+.jp-video-thumb video {
+  width:100%; height: 100%; object-fit:cover; display:block;
+}
+.jp-video-thumb .jp-play {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background: radial-gradient(circle, rgba(0,0,0,.15), rgba(0,0,0,.45));
+  transition: opacity .25s;
+}
+.jp-video-thumb:hover .jp-play { opacity:.6; }
+
+/* Carousel indicators */
+.jp-dot { width:8px; height:8px; border-radius:999px; background: rgba(255,255,255,.28); transition: all .3s; }
+.jp-dot.jp-dot-active { width:28px; background: linear-gradient(90deg, #a855f7, #22d3ee); }
